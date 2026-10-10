@@ -5,6 +5,7 @@
 #include "level.h"
 #include "minifig.h"
 #include "render.h"
+#include "trooper_model.h"
 #include "weapons.h"
 
 #include "raylib.h"
@@ -210,6 +211,7 @@ private:
     GameOptions opt_;
     Level level_;
     Effects fx_;
+    TrooperModel trooperModel_;
     Player player_;
     OrbitCam cam_;
     std::vector<Npc> npcs_;
@@ -1008,7 +1010,10 @@ void Game::Draw() {
             case NpcKind::Patron:
                 break;
         }
-        MinifigFrame f = DrawMinifig(n.look, pose, n.pos, n.yaw, n.flash > 0 ? 0.7f : 0.0f);
+        float flash = n.flash > 0 ? 0.7f : 0.0f;
+        MinifigFrame f = (n.kind == NpcKind::Trooper && trooperModel_.Loaded())
+                             ? trooperModel_.Draw(pose, n.pos, n.yaw, flash)
+                             : DrawMinifig(n.look, pose, n.pos, n.yaw, flash);
         n.hand = f.rightHand;
         n.hasHand = true;
         if (n.kind == NpcKind::Trooper) DrawBlaster(f.rightHand, (int)n.seed % 3 == 0);
@@ -1139,6 +1144,7 @@ int Game::Run() {
     SetTargetFPS(60);
     Audio::Init();
     R::Init();
+    if (!opt_.proceduralTroopers) trooperModel_.Load();
     Init();
     if (opt_.screenshotPath) SetupDemoScene();
     else {
@@ -1154,6 +1160,7 @@ int Game::Run() {
         frame_++;
     }
 
+    trooperModel_.Unload();
     R::Shutdown();
     Audio::Shutdown();
     CloseWindow();

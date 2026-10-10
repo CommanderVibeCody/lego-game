@@ -9,13 +9,16 @@ namespace {
 
 const char* kVertexShader = R"(#version 330
 in vec3 vertexPosition;
+in vec2 vertexTexCoord;
 in vec3 vertexNormal;
 uniform mat4 mvp;
 uniform mat4 matModel;
 uniform mat4 matNormal;
 out vec3 fragPos;
 out vec3 fragNormal;
+out vec2 fragTexCoord;
 void main() {
+    fragTexCoord = vertexTexCoord;
     fragPos = vec3(matModel * vec4(vertexPosition, 1.0));
     fragNormal = normalize(vec3(matNormal * vec4(vertexNormal, 0.0)));
     gl_Position = mvp * vec4(vertexPosition, 1.0);
@@ -25,6 +28,8 @@ void main() {
 const char* kFragmentShader = R"(#version 330
 in vec3 fragPos;
 in vec3 fragNormal;
+in vec2 fragTexCoord;
+uniform sampler2D texture0;
 uniform vec4 colDiffuse;
 uniform vec3 viewPos;
 uniform vec3 sunDir;
@@ -69,7 +74,8 @@ void main() {
     }
 
     float rim = pow(1.0 - max(dot(n, v), 0.0), 3.0) * 0.18;
-    vec3 col = colDiffuse.rgb * diffuse + vec3(spec) + rim * amb;
+    vec3 base = texture(texture0, fragTexCoord).rgb * colDiffuse.rgb;
+    vec3 col = base * diffuse + vec3(spec) + rim * amb;
 
     float dist = length(viewPos - fragPos);
     float f = 1.0 - exp(-pow(dist * fogDensity, 2.0));
@@ -200,6 +206,8 @@ void Shutdown() {
     UnloadMesh(gTorso);
     UnloadShader(gShader);
 }
+
+Shader LitShader() { return gShader; }
 
 void ClearLights() { gLightCount = 0; }
 

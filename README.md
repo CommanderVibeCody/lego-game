@@ -8,9 +8,10 @@ studs you can collect.
 ![Screenshot](docs/screenshot.png)
 
 > **Not affiliated.** This project is not affiliated with, endorsed by, or connected to the LEGO Group,
-> Lucasfilm or Disney. It contains **no** official models, textures, sounds or logos: every character,
-> weapon and building is generated procedurally in code from cubes, cylinders and spheres, and all
-> sound effects are synthesized at runtime.
+> Lucasfilm or Disney. It contains no official LEGO or Lucasfilm assets. The level, the player and the other
+> characters, props and weapons are generated procedurally in code from cubes, cylinders and spheres, and all
+> sound effects are synthesized at runtime. The only external asset is a fan-made trooper model licensed
+> under CC BY 4.0 (see [Credits](#credits)).
 
 ## Features
 
@@ -18,8 +19,10 @@ studs you can collect.
 - **Procedural cantina**: sandy domed room with doorway, round central bar with a drinks tower, round tables
   and stools, a band stage, colored hanging lamps, plus desert huts, dunes and twin suns outside.
 - **Brick-toy minifigures**: cylinder head with stud, trapezoid torso, blocky arms with C-shaped hands,
-  hips and legs, walk cycle with swinging arms and legs. Armored white troopers, alien patrons,
-  a band and a bartender.
+  hips and legs, walk cycle with swinging arms and legs. Alien patrons, a band and a bartender.
+- **Armored white troopers** use a CC BY 4.0 fan model (`assets/models/trooper.glb`) loaded with raylib.
+  Its legs, arms and hands are separate meshes, so the game animates walking and aiming by rotating them.
+  If the file is missing (or with `--no-model`) the game falls back to procedural troopers.
 - **Laser sword**: ignition animation, glowing blade in 5 colors, three-hit swing combo, blocking that
   **deflects enemy bolts** back at the troopers.
 - **Blaster**: shoots glowing bolts with light auto-aim.
@@ -116,8 +119,12 @@ build\bin\lego-game.exe
 ### Command line options
 
 ```
-lego-game [--width N] [--height N] [--screenshot FILE [--frames N]]
+lego-game [--width N] [--height N] [--screenshot FILE [--frames N]] [--no-model]
 ```
+
+The game looks for `assets/models/trooper.glb` next to the executable (CMake copies `assets/` into
+`build/bin/` after every build), then in `../../assets` relative to the executable, then in the working directory,
+so it works when started from the repository root or from `build/bin`.
 
 `--screenshot` runs a short scripted scene, saves a PNG and exits (used by CI as a headless smoke test,
 e.g. `xvfb-run -a ./build/bin/lego-game --screenshot shot.png`).
@@ -134,8 +141,22 @@ e.g. `xvfb-run -a ./build/bin/lego-game --screenshot shot.png`).
 | `src/effects.cpp` | Brick debris physics, collectible studs, sparks |
 | `src/render.cpp` | Lit primitive renderer (embedded GLSL shader, glow halos, blob shadows) |
 | `src/audio.cpp` | Runtime-synthesized sound effects |
+| `src/trooper_model.cpp` | Loads `assets/models/trooper.glb`, normalizes it, animates its limb meshes |
+
+## Credits
+
+- **"Lego Stormtrooper"** 3D model by [ThrillDaWill](https://sketchfab.com/ThrillDaWill)
+  ([Sketchfab](https://sketchfab.com/3d-models/lego-stormtrooper-e4581317a2844d09ae7252abb73c63d2)),
+  licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). It is included unmodified in
+  `assets/models/trooper.glb`; the game only scales, positions and animates it at runtime. It is a fan model;
+  neither its author nor this project is affiliated with the LEGO Group or Lucasfilm.
+- [raylib](https://www.raylib.com/) by Ramon Santamaria and contributors (zlib/libpng license).
+
+See [CREDITS.md](CREDITS.md) for details.
 
 ## License
 
-MIT for the code in this repository. raylib is licensed under the zlib/libpng license.
-LEGO and Star Wars are trademarks of their respective owners and are mentioned only to describe the inspiration.
+MIT for the code in this repository. The trooper model in `assets/models/` is licensed separately under
+CC BY 4.0 (see `assets/models/LICENSE.txt`). raylib is licensed under the zlib/libpng license.
+LEGO and Star Wars are trademarks of their respective owners and are mentioned only to describe the inspiration
+and to credit the fan model.

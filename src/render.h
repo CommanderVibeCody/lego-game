@@ -11,6 +11,8 @@ namespace R {
 
 void Init();
 void Shutdown();
+// The lit "plastic" shader, e.g. to assign to the materials of a loaded Model.
+Shader LitShader();
 
 // Per-frame lighting setup -------------------------------------------------
 void ClearLights();

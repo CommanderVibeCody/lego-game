@@ -1,0 +1,10 @@
+trooper.glb
+-----------
+"Lego Stormtrooper" by ThrillDaWill (https://sketchfab.com/ThrillDaWill)
+Source: https://sketchfab.com/3d-models/lego-stormtrooper-e4581317a2844d09ae7252abb73c63d2
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+         https://creativecommons.org/licenses/by/4.0/
+Changes: none (included unmodified; scaled and animated at runtime only).
+
+Fan-made model; not affiliated with or endorsed by the LEGO Group or Lucasfilm.
+This file is NOT covered by the MIT license of the game code.

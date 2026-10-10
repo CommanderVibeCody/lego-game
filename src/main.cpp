@@ -12,7 +12,8 @@ static void PrintUsage() {
         "  --width N            window width  (default 1280)\n"
         "  --height N           window height (default 720)\n"
         "  --screenshot FILE    run a short scripted scene, save a PNG and exit\n"
-        "  --frames N           frame at which the screenshot is taken (default 150)\n");
+        "  --frames N           frame at which the screenshot is taken (default 150)\n"
+        "  --no-model           use the procedural troopers instead of assets/models/trooper.glb\n");
 }
 
 int main(int argc, char** argv) {
@@ -29,6 +30,7 @@ int main(int argc, char** argv) {
         else if (!std::strcmp(argv[i], "--height")) options.height = std::atoi(next("--height"));
         else if (!std::strcmp(argv[i], "--screenshot")) options.screenshotPath = next("--screenshot");
         else if (!std::strcmp(argv[i], "--frames")) options.screenshotFrame = std::atoi(next("--frames"));
+        else if (!std::strcmp(argv[i], "--no-model")) options.proceduralTroopers = true;
         else if (!std::strcmp(argv[i], "--help") || !std::strcmp(argv[i], "-h")) { PrintUsage(); return 0; }
         else { std::fprintf(stderr, "unknown option: %s\n", argv[i]); PrintUsage(); return 1; }
     }

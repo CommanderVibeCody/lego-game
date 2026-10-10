@@ -39,6 +39,7 @@ add_executable(lego-game
   src/level.cpp
   src/effects.cpp
   src/audio.cpp
+  src/trooper_model.cpp
 )
 
 target_link_libraries(lego-game PRIVATE raylib)
@@ -57,4 +58,11 @@ endif()
 # Put the executable in build/bin on every platform / generator.
 set_target_properties(lego-game PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "$<1:${CMAKE_BINARY_DIR}/bin>"
+)
+
+# Copy runtime assets next to the executable so it runs from build/bin as well.
+add_custom_command(TARGET lego-game POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+          "${CMAKE_CURRENT_SOURCE_DIR}/assets" "$<TARGET_FILE_DIR:lego-game>/assets"
+  COMMENT "Copying assets next to the executable"
 )
