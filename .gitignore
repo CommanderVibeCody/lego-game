@@ -1,0 +1,12 @@
+build/
+build-*/
+out/
+.vs/
+.vscode/
+.idea/
+*.o
+*.obj
+*.exe
+*.pdb
+.DS_Store
+screenshot_*.png

@@ -1,0 +1,26 @@
+name: build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake libx11-dev libxrandr-dev libxinerama-dev \
+            libxcursor-dev libxi-dev libgl1-mesa-dev xvfb
+      - name: Configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build --config Release --parallel
+      - name: Headless smoke test
+        run: xvfb-run -a -s "-screen 0 1280x720x24" ./build/bin/lego-game --screenshot ci-screenshot.png --frames 90
+      - uses: actions/upload-artifact@v4
+        with:
+          name: screenshot
+          path: ci-screenshot.png
